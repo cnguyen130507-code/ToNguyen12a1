@@ -1,0 +1,513 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Tin học 12 | Bài 6 - Giao tiếp và ứng xử trong không gian mạng</title>
+<style>
+:root{
+  --bg:#080d20;--card:#141c38;--text:#f1f5ff;
+  --muted:#b4c2dc;--blue:#5b8cff;--cyan:#22d3ee;
+  --purple:#a78bfa;--green:#34d399;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:Arial,"Segoe UI",sans-serif;
+  color:var(--text);background:var(--bg);line-height:1.7
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+.bg{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+  radial-gradient(ellipse at 15% 10%,#28418a65,transparent 40%),
+  radial-gradient(ellipse at 90% 35%,#713cb850,transparent 35%),
+  #080d20
+}
+nav{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:15px;padding:16px 5%;background:#0b1330ed;
+  position:sticky;top:0;z-index:10;border-bottom:1px solid #ffffff19;
+  flex-wrap:wrap
+}
+.logo{font-size:20px;font-weight:800;color:var(--cyan)}
+.links{display:flex;gap:18px;flex-wrap:wrap;font-size:14px}
+.links a:hover{color:var(--cyan)}
+.hero{
+  max-width:1150px;margin:auto;padding:85px 5% 70px;
+  display:grid;grid-template-columns:1.15fr 1fr;gap:35px;
+  align-items:center
+}
+.tag{
+  display:inline-block;border:1px solid #22d3ee80;
+  color:var(--cyan);padding:7px 15px;border-radius:30px;
+  font-size:13px;background:#22d3ee12
+}
+h1{
+  font-size:clamp(34px,5vw,60px);
+  line-height:1.17;margin:20px 0
+}
+.gradient{
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+  color:transparent;background-clip:text
+}
+p{color:var(--muted)}
+.hero p{font-size:17px}
+.btn{
+  display:inline-block;padding:12px 23px;border-radius:12px;
+  background:linear-gradient(120deg,#3978ff,#8655e9);
+  border:0;color:white;font-weight:700;
+  transition:transform .25s,box-shadow .25s
+}
+.btn:hover{transform:translateY(-4px);box-shadow:0 8px 28px #597dff70}
+.illustration{
+  background:linear-gradient(135deg,#162a57,#34204f);
+  border:1px solid #ffffff24;border-radius:28px;
+  padding:25px;box-shadow:0 20px 60px #0005;
+  animation:float 5s ease-in-out infinite
+}
+.illustration svg{width:100%;height:auto}
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-13px)}
+}
+section{max-width:1150px;margin:auto;padding:55px 5%}
+.heading{text-align:center;margin-bottom:32px}
+.heading h2{font-size:clamp(26px,4vw,38px);margin:0}
+.heading p{margin:8px auto;max-width:650px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{
+  background:linear-gradient(150deg,#182345,#111a34);
+  border:1px solid #ffffff1e;border-radius:20px;
+  padding:25px;transition:.3s
+}
+.card:hover{
+  transform:translateY(-7px);border-color:#22d3ee88;
+  box-shadow:0 12px 35px #0005
+}
+.card h3{color:white;margin:10px 0}
+.card ul{padding-left:22px;color:var(--muted)}
+.card li{margin:9px 0}
+.card strong{color:#90eaff}
+.symbol{
+  font-size:35px;background:#ffffff10;
+  display:inline-flex;width:65px;height:65px;
+  align-items:center;justify-content:center;border-radius:17px
+}
+.wide{grid-column:span 2}
+.notice{
+  padding:16px 20px;border-radius:14px;
+  background:#fbbf2412;border:1px solid #fbbf2450;
+  color:#f9dda0;margin-bottom:24px
+}
+.examples{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.example-art{
+  height:145px;display:grid;place-items:center;
+  background:linear-gradient(130deg,#213d80,#553b85);
+  border-radius:14px;margin-bottom:15px;overflow:hidden
+}
+.example-art svg{width:85%;max-height:135px}
+.reveal{
+  opacity:0;transform:translateY(30px);
+  transition:opacity .65s,transform .65s
+}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.scenario{
+  background:var(--card);border:1px solid #ffffff24;
+  border-radius:20px;padding:25px;max-width:850px;margin:auto
+}
+.choice{
+  display:block;width:100%;text-align:left;
+  padding:14px 18px;margin:12px 0;border-radius:12px;
+  background:#202c50;color:white;border:1px solid #ffffff25;
+  transition:.2s
+}
+.choice:hover{background:#2b3d70;border-color:var(--cyan)}
+.choice.correct{background:#075e4b;border-color:var(--green)}
+.choice.wrong{background:#713044;border-color:#fb7185}
+.feedback{font-weight:bold;min-height:26px}
+.quiz-wrap{
+  max-width:850px;margin:auto;background:#111b36;
+  border:1px solid #ffffff25;border-radius:22px;padding:26px
+}
+.progress{height:9px;background:#2b3757;border-radius:20px;overflow:hidden}
+.progress-bar{
+  width:0;height:100%;background:linear-gradient(90deg,var(--cyan),var(--purple));
+  transition:width .4s
+}
+.question{font-size:20px;color:white;font-weight:bold}
+.option{
+  display:block;padding:13px 16px;margin:10px 0;
+  background:#1c2949;border:1px solid #ffffff25;
+  border-radius:12px;cursor:pointer
+}
+.option:has(input:checked){border-color:var(--cyan);background:#234371}
+.option input{accent-color:#22d3ee;margin-right:10px}
+.quiz-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.secondary{background:#283658}
+#score{font-size:26px;color:var(--green);font-weight:800}
+footer{
+  text-align:center;padding:35px 5%;border-top:1px solid #ffffff20;
+  background:#0b1228
+}
+@media(max-width:760px){
+  .hero{grid-template-columns:1fr;padding-top:50px}
+  .grid,.examples{grid-template-columns:1fr}
+  .wide{grid-column:auto}
+  nav{justify-content:center}
+  .links{justify-content:center}
+  section{padding:40px 5%}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+
+<nav>
+  <div class="logo">✦ INFO12</div>
+  <div class="links">
+    <a href="#lythuyet">Lý thuyết</a>
+    <a href="#vidu">Ví dụ</a>
+    <a href="#tinhhuong">Tình huống</a>
+    <a href="#tracnghiem">Trắc nghiệm</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div>
+    <span class="tag">TIN HỌC 12 • KẾT NỐI TRI THỨC</span>
+    <h1>Giao tiếp và ứng xử trong <span class="gradient">không gian mạng</span></h1>
+    <p><b>Chủ đề 3:</b> Đạo đức, pháp luật và văn hoá trong môi trường số</p>
+    <p><b>Bài 6:</b> Giao tiếp và ứng xử trong không gian mạng</p>
+    <p>Khám phá kiến thức, thực hành ứng xử văn minh và kiểm tra hiểu biết qua các hoạt động tương tác.</p>
+    <a class="btn" href="#lythuyet">Bắt đầu khám phá →</a>
+  </div>
+  <div class="illustration">
+    <svg viewBox="0 0 450 340" role="img" aria-label="Minh họa giao tiếp trực tuyến">
+      <defs>
+        <linearGradient id="g" x2="1" y2="1">
+          <stop stop-color="#22d3ee"/>
+          <stop offset="1" stop-color="#a78bfa"/>
+        </linearGradient>
+      </defs>
+      <rect x="45" y="55" width="360" height="220" rx="22" fill="#0b1735" stroke="url(#g)" stroke-width="4"/>
+      <rect x="70" y="80" width="310" height="170" rx="12" fill="#182e60"/>
+      <circle cx="157" cy="140" r="34" fill="#38bdf8"/>
+      <circle cx="157" cy="131" r="15" fill="#fff"/>
+      <path d="M126 180 Q157 139 188 180" fill="#fff"/>
+      <circle cx="291" cy="140" r="34" fill="#a78bfa"/>
+      <circle cx="291" cy="131" r="15" fill="#fff"/>
+      <path d="M260 180 Q291 139 322 180" fill="#fff"/>
+      <rect x="180" y="208" width="90" height="17" rx="8" fill="#34d399"/>
+      <path d="M190 277 L175 301 H275 L260 277" fill="#7384b9"/>
+      <rect x="125" y="301" width="200" height="9" rx="4" fill="#a6b5dc"/>
+      <circle cx="52" cy="45" r="17" fill="#22d3ee"/>
+      <circle cx="400" cy="287" r="15" fill="#a78bfa"/>
+      <path d="M377 26 L383 39 L397 44 L383 49 L377 63 L371 49 L357 44 L371 39Z" fill="#fbbf24"/>
+    </svg>
+  </div>
+</header>
+
+<main>
+<section id="lythuyet">
+  <div class="heading reveal">
+    <h2>📚 Khám phá lý thuyết</h2>
+    <p>Những kiến thức trọng tâm về giao tiếp và văn hóa ứng xử trong môi trường số.</p>
+  </div>
+  <div class="notice reveal">
+    <b>Lưu ý:</b> Đây là bản tóm tắt phục vụ ôn tập, không phải nguyên văn SGK. Cần đối chiếu cách phân chia mục và cách diễn đạt với SGK trước khi sử dụng làm tài liệu chính thức.
+  </div>
+  <div class="grid">
+    <article class="card reveal">
+      <div class="symbol">🌐</div>
+      <h3>Giao tiếp trong không gian mạng</h3>
+      <ul>
+        <li><strong>Giao tiếp trực tuyến:</strong> trao đổi thông tin thông qua mạng và các thiết bị số.</li>
+        <li><strong>Phương thức:</strong> thư điện tử, tin nhắn, mạng xã hội, cuộc gọi video.</li>
+        <li><strong>Đồng bộ:</strong> giao tiếp theo thời gian thực.</li>
+        <li><strong>Không đồng bộ:</strong> người nhận có thể phản hồi sau.</li>
+      </ul>
+    </article>
+    <article class="card reveal">
+      <div class="symbol">🚀</div>
+      <h3>Ưu điểm</h3>
+      <ul>
+        <li><strong>Nhanh chóng:</strong> trao đổi thông tin trong thời gian ngắn.</li>
+        <li><strong>Linh hoạt:</strong> kết nối từ nhiều địa điểm.</li>
+        <li><strong>Tiết kiệm:</strong> giảm chi phí đi lại.</li>
+        <li><strong>Đa phương tiện:</strong> chia sẻ văn bản, hình ảnh và video.</li>
+      </ul>
+    </article>
+    <article class="card reveal">
+      <div class="symbol">⚠️</div>
+      <h3>Hạn chế và rủi ro</h3>
+      <ul>
+        <li><strong>Hiểu nhầm:</strong> khó truyền đạt đầy đủ cảm xúc.</li>
+        <li><strong>Quyền riêng tư:</strong> nguy cơ lộ thông tin cá nhân.</li>
+        <li><strong>Tin giả:</strong> thông tin không chính xác lan truyền nhanh.</li>
+        <li><strong>Bắt nạt mạng:</strong> lời nói hoặc hành vi gây tổn thương.</li>
+      </ul>
+    </article>
+    <article class="card wide reveal">
+      <div class="symbol">🤝</div>
+      <h3>Ứng xử nhân văn và có văn hóa</h3>
+      <ul>
+        <li><strong>Tôn trọng:</strong> lắng nghe ý kiến khác biệt, không công kích cá nhân.</li>
+        <li><strong>Lịch sự:</strong> sử dụng ngôn từ phù hợp, không xúc phạm người khác.</li>
+        <li><strong>Trách nhiệm:</strong> suy nghĩ trước khi đăng hoặc chia sẻ thông tin.</li>
+        <li><strong>Trung thực:</strong> kiểm chứng thông tin trước khi lan truyền.</li>
+        <li><strong>Đồng cảm:</strong> hỗ trợ và động viên người gặp khó khăn.</li>
+      </ul>
+    </article>
+    <article class="card reveal">
+      <div class="symbol">🛡️</div>
+      <h3>Hành vi nên làm và cần tránh</h3>
+      <ul>
+        <li><strong>Nên:</strong> bảo vệ dữ liệu cá nhân, xin phép trước khi đăng ảnh người khác.</li>
+        <li><strong>Nên:</strong> báo cáo nội dung độc hại, góp ý lịch sự.</li>
+        <li><strong>Tránh:</strong> tung tin giả, xúc phạm, mạo danh và tiết lộ bí mật của người khác.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section id="vidu">
+  <div class="heading reveal">
+    <h2>🖼️ Ví dụ thực tế</h2>
+    <p>Quan sát những tình huống thường gặp trong cuộc sống số.</p>
+  </div>
+  <div class="examples">
+    <article class="card reveal">
+      <div class="example-art">
+        <svg viewBox="0 0 220 130" aria-label="Học trực tuyến">
+          <rect x="28" y="12" width="164" height="98" rx="12" fill="#102247" stroke="#38bdf8" stroke-width="3"/>
+          <rect x="40" y="24" width="140" height="68" rx="5" fill="#304d91"/>
+          <circle cx="82" cy="48" r="14" fill="#fbbf24"/>
+          <path d="M60 78 Q82 51 104 78" fill="#fbbf24"/>
+          <circle cx="143" cy="48" r="14" fill="#a78bfa"/>
+          <path d="M121 78 Q143 51 165 78" fill="#a78bfa"/>
+          <path d="M70 112 H150 L164 122 H56Z" fill="#94a3b8"/>
+        </svg>
+      </div>
+      <h3>Học trực tuyến</h3>
+      <p>Học sinh tham gia lớp học qua cuộc gọi video, bật micro khi phát biểu và tôn trọng người đang nói.</p>
+    </article>
+    <article class="card reveal">
+      <div class="example-art">
+        <svg viewBox="0 0 220 130" aria-label="Bảo vệ quyền riêng tư">
+          <path d="M110 12 L169 33 V70 Q165 103 110 121 Q55 103 51 70 V33Z" fill="#1d4ed8" stroke="#67e8f9" stroke-width="4"/>
+          <rect x="86" y="62" width="48" height="36" rx="6" fill="#f8fafc"/>
+          <path d="M95 63 V51 A15 15 0 0 1 125 51 V63" fill="none" stroke="#f8fafc" stroke-width="8"/>
+          <circle cx="110" cy="78" r="5" fill="#2563eb"/>
+        </svg>
+      </div>
+      <h3>Bảo vệ thông tin</h3>
+      <p>Không công khai số điện thoại, mật khẩu hay ảnh riêng tư của người khác khi chưa được đồng ý.</p>
+    </article>
+    <article class="card reveal">
+      <div class="example-art">
+        <svg viewBox="0 0 220 130" aria-label="Kiểm chứng thông tin">
+          <rect x="42" y="13" width="125" height="98" rx="9" fill="#f8fafc"/>
+          <path d="M60 37 H145 M60 53 H145 M60 69 H117" stroke="#64748b" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="141" cy="86" r="26" fill="#22d3ee" fill-opacity=".3" stroke="#22d3ee" stroke-width="6"/>
+          <path d="M159 105 L181 124" stroke="#22d3ee" stroke-width="8" stroke-linecap="round"/>
+          <path d="M129 86 L139 96 L155 75" stroke="#34d399" stroke-width="6" fill="none"/>
+        </svg>
+      </div>
+      <h3>Kiểm chứng tin tức</h3>
+      <p>Khi thấy một thông tin gây sốc trên mạng xã hội, cần kiểm tra nguồn đáng tin cậy trước khi chia sẻ.</p>
+    </article>
+  </div>
+</section>
+
+<section id="tinhhuong">
+  <div class="heading reveal">
+    <h2>🎮 Thử thách tình huống</h2>
+    <p>Chọn cách ứng xử phù hợp nhất.</p>
+  </div>
+  <div class="scenario reveal">
+    <span class="tag">TÌNH HUỐNG THỰC TẾ</span>
+    <h3>Bạn thấy một người bạn bị chế giễu trong nhóm chat lớp. Bạn sẽ làm gì?</h3>
+    <button class="choice" onclick="scenario(0,this)">A. Tham gia bình luận để trêu đùa.</button>
+    <button class="choice" onclick="scenario(1,this)">B. Khuyên mọi người dừng lại và hỗ trợ bạn bị chế giễu.</button>
+    <button class="choice" onclick="scenario(2,this)">C. Chụp màn hình rồi chia sẻ cho nhiều nhóm khác.</button>
+    <p class="feedback" id="scenarioFeedback" aria-live="polite"></p>
+  </div>
+</section>
+
+<section id="tracnghiem">
+  <div class="heading reveal">
+    <h2>🧠 Trắc nghiệm kiến thức</h2>
+    <p>Hoàn thành 5 câu hỏi để kiểm tra mức độ hiểu bài.</p>
+  </div>
+  <div class="quiz-wrap reveal">
+    <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+    <p id="counter">Câu 1 / 5</p>
+    <div id="quizArea"></div>
+    <div class="quiz-actions">
+      <button class="btn" id="nextBtn" onclick="nextQuestion()">Kiểm tra đáp án</button>
+      <button class="btn secondary" onclick="resetQuiz()">Làm lại</button>
+    </div>
+    <p id="quizFeedback" aria-live="polite"></p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <b>✦ INFO12 • HỌC TẬP THÔNG MINH</b>
+  <p>Tin học 12 – Kết nối tri thức với cuộc sống</p>
+  <p>Bài 6: Giao tiếp và ứng xử trong không gian mạng</p>
+</footer>
+
+<script>
+const revealObserver = "IntersectionObserver" in window
+ ? new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add("visible");
+        revealObserver.unobserve(e.target);
+      }
+    });
+  },{threshold:0.08})
+ : null;
+
+document.querySelectorAll(".reveal").forEach(el=>{
+  if(revealObserver) revealObserver.observe(el);
+  else el.classList.add("visible");
+});
+
+function scenario(index,button){
+  const buttons=document.querySelectorAll(".scenario .choice");
+  buttons.forEach(b=>{
+    b.classList.remove("correct","wrong");
+    b.disabled=true;
+  });
+  button.classList.add(index===1?"correct":"wrong");
+  if(index!==1)buttons[1].classList.add("correct");
+  document.getElementById("scenarioFeedback").textContent=
+    index===1
+    ?"✅ Chính xác! Hãy thể hiện sự đồng cảm, bảo vệ người bị tổn thương và báo cho người có trách nhiệm khi cần."
+    :"❌ Chưa phù hợp. Cần tránh làm tổn thương hoặc lan truyền nội dung chế giễu người khác.";
+}
+
+const questions=[
+  {
+    q:"Đâu là ưu điểm của giao tiếp trong không gian mạng?",
+    a:["Luôn bảo đảm thông tin chính xác","Kết nối nhanh dù ở xa","Không cần thiết bị","Không có rủi ro"],
+    correct:1,
+    explain:"Giao tiếp trực tuyến giúp kết nối nhanh chóng giữa những người ở nhiều địa điểm."
+  },
+  {
+    q:"Hành vi nào thể hiện sự tôn trọng trên mạng?",
+    a:["Công kích người có ý kiến khác","Đăng ảnh người khác không xin phép","Tranh luận lịch sự, có lý lẽ","Lan truyền tin đồn"],
+    correct:2,
+    explain:"Tranh luận lịch sự giúp duy trì môi trường giao tiếp văn minh."
+  },
+  {
+    q:"Khi nhận được tin chưa được kiểm chứng, em nên làm gì?",
+    a:["Chia sẻ ngay","Kiểm tra nguồn và độ tin cậy","Thêm nội dung gây sốc","Gửi cho tất cả bạn bè"],
+    correct:1,
+    explain:"Kiểm chứng thông tin trước khi chia sẻ giúp hạn chế tin giả."
+  },
+  {
+    q:"Đâu là nguy cơ của giao tiếp trực tuyến?",
+    a:["Tiết kiệm thời gian","Dễ trao đổi tài liệu","Lộ thông tin cá nhân","Học nhóm từ xa"],
+    correct:2,
+    explain:"Chia sẻ thông tin thiếu cẩn trọng có thể gây rủi ro về quyền riêng tư."
+  },
+  {
+    q:"Khi bạn bè bị bắt nạt trên mạng, cách ứng xử nào phù hợp?",
+    a:["Cổ vũ người bắt nạt","Phát tán bài viết xúc phạm","Phớt lờ trong mọi trường hợp","Động viên, hỗ trợ và báo người có trách nhiệm"],
+    correct:3,
+    explain:"Sự đồng cảm và hỗ trợ phù hợp góp phần tạo môi trường mạng an toàn."
+  }
+];
+
+let current=0,score=0,answered=false;
+
+function renderQuiz(){
+  const area=document.getElementById("quizArea");
+  const btn=document.getElementById("nextBtn");
+  document.getElementById("quizFeedback").textContent="";
+  document.getElementById("progressBar").style.width=
+    (current/questions.length*100)+"%";
+
+  if(current>=questions.length){
+    document.getElementById("counter").textContent="Hoàn thành!";
+    area.innerHTML='<h3>Kết quả học tập</h3><p id="score">'+score+'/'+questions.length+' câu đúng</p><p>'+
+      (score===5?"Xuất sắc! Bạn đã nắm rất tốt nội dung ôn tập.":
+       score>=3?"Khá tốt! Hãy ôn lại những câu chưa chính xác.":
+       "Hãy xem lại phần lý thuyết và thử lại nhé!")+'</p>';
+    document.getElementById("progressBar").style.width="100%";
+    btn.style.display="none";
+    return;
+  }
+
+  const item=questions[current];
+  document.getElementById("counter").textContent=
+    "Câu "+(current+1)+" / "+questions.length;
+  area.innerHTML="";
+  const title=document.createElement("p");
+  title.className="question";
+  title.textContent=item.q;
+  area.appendChild(title);
+
+  item.a.forEach((answer,i)=>{
+    const label=document.createElement("label");
+    label.className="option";
+    const input=document.createElement("input");
+    input.type="radio";input.name="answer";input.value=i;
+    label.append(input,document.createTextNode(answer));
+    area.appendChild(label);
+  });
+  btn.style.display="inline-block";
+  btn.textContent="Kiểm tra đáp án";
+  answered=false;
+}
+
+function nextQuestion(){
+  if(answered){
+    current++;
+    renderQuiz();
+    return;
+  }
+  const selected=document.querySelector('input[name="answer"]:checked');
+  if(!selected){
+    document.getElementById("quizFeedback").textContent=
+      "⚠️ Vui lòng chọn một đáp án.";
+    return;
+  }
+  const item=questions[current];
+  const isCorrect=Number(selected.value)===item.correct;
+  if(isCorrect)score++;
+  document.querySelectorAll(".option").forEach((label,i)=>{
+    label.querySelector("input").disabled=true;
+    if(i===item.correct){
+      label.style.borderColor="#34d399";
+      label.style.background="#075e4b";
+    }else if(i===Number(selected.value)){
+      label.style.borderColor="#fb7185";
+      label.style.background="#713044";
+    }
+  });
+  document.getElementById("quizFeedback").textContent=
+    (isCorrect?"✅ Chính xác! ":"❌ Chưa chính xác. ")+item.explain;
+  answered=true;
+  document.getElementById("nextBtn").textContent=
+    current===questions.length-1?"Xem kết quả":"Câu tiếp theo →";
+}
+
+function resetQuiz(){
+  current=0;score=0;answered=false;
+  renderQuiz();
+}
+renderQuiz();
+</script>
+</body>
+</html>
